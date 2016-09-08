@@ -1,0 +1,101 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+
+    <title></title>
+    <meta name="description" content="">
+    <meta name="author" content="Jin Park">
+
+    <link rel="stylesheet" href="">
+
+    <!--[if lt IE 9]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <style>
+    button.active, button:active {
+        color:red;
+        background-color: red;
+    }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+</div>
+
+    
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+<script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
+<script src="https://cdn.rawgit.com/RobertWHurst/KeyboardJS/master/dist/keyboard.min.js"></script>
+<script>
+    supportedKeys = ['q', 'w', 'e', 'r', 'a', 's', 'd', 'f', 'z', 'x', 'c', 'v', 'u', 'i', 'o', 'p', 'j', 'k', 'l', 'semicolon', 'm', 'comma', 'dot', 'slash'];
+    audio_json = {};
+    audio_buffer_json = {};
+    var audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    _.each(supportedKeys, function(n){
+        var source = audioContext.createBufferSource();
+        var request = new XMLHttpRequest();
+        request.open('GET', 'audio/' + n + '.wav', true);
+        request.responseType = 'arraybuffer';
+        request.onload = function(){
+            audioContext.decodeAudioData(request.response, function(buffer) {
+                source.buffer = buffer;
+                audio_buffer_json[n] = buffer;
+                source.connect(audioContext.destination);
+                audio_json[n] = source;
+            });
+        }
+        request.send();
+    });
+    var actualKey = function(key) {
+        var originalKey = key;
+        if (key == 'dot'){
+            originalKey = '.';
+        }
+        if (key == 'slash'){
+            originalKey = '/';
+        }
+        if (key == 'comma'){
+            originalKey = ',';
+        }
+        if (key == 'semicolon'){
+            originalKey = ';';
+        }
+        return originalKey;
+    };
+    
+    var container = $('.container');
+    _.each(supportedKeys, function(n){
+        var button = '<button class="' + n + '">' + actualKey(n) + '</button>';
+        container.append(button);
+    });
+
+    _.each(supportedKeys, function(n) {
+        actualKey = n;
+        if (n == 'dot'){
+            actualKey = '.';
+        }
+        if (n == 'slash'){
+            actualKey = '/';
+        }
+        keyboardJS.bind(actualKey, function(e){
+            audio_json[n].start(0);
+            audio_json[n] = audioContext.createBufferSource();
+            audio_json[n].buffer = audio_buffer_json[n];
+            audio_json[n].connect(audioContext.destination);
+            $('.' + n).addClass('active');
+            // console.log(actualKey);
+            // e.preventRepeat();
+        }, function(e){
+            $('.' + n).removeClass('active');
+        })
+    });
+</script>
+
+</body>
+</html>
