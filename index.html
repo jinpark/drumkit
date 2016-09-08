@@ -50,7 +50,7 @@
 
 <body>
 
-    <h2>Jin got bored and made a drum kit</h2>
+<h2>Jin got bored and made a drum kit</h2>
 <div class="container"></div>
 
     
@@ -95,20 +95,10 @@
     };
 
     var container = $('.container');
-    _.each(supportedKeys, function(n){
+    _.each(supportedKeys, function(n) {
         var button = '<button class="' + n + '">' + actualKey(n) + '</button>';
         container.append(button);
-    });
-
-    _.each(supportedKeys, function(n) {
-        actualKey = n;
-        if (n == 'dot'){
-            actualKey = '.';
-        }
-        if (n == 'slash'){
-            actualKey = '/';
-        }
-        keyboardJS.bind(actualKey, function(e){
+        keyboardJS.bind(actualKey(n), function(e){
             audio_json[n].start(0);
             audio_json[n] = audioContext.createBufferSource();
             audio_json[n].buffer = audio_buffer_json[n];
