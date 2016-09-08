@@ -15,25 +15,50 @@
     <![endif]-->
 
     <style>
+    h2 {
+        text-align: center;
+    }
+    .container {
+        margin: auto;
+        border: 10px solid black;
+        max-width: 760px;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        background-color: grey;
+
+    }
+    button {
+        width: 75px;
+        height: 75px;
+        margin: 10px;
+        font-size: 3em;
+    };
+    button:nth-child(8n){
+        margin-right: 0;
+    }
+    button:before {
+        padding-top: 100%;
+    }
     button.active, button:active {
         color:red;
         background-color: red;
     }
+
     </style>
 </head>
 
 <body>
 
-<div class="container">
-
-</div>
+    <h2>Jin got bored and made a drum kit</h2>
+<div class="container"></div>
 
     
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
 <script src="https://cdn.rawgit.com/RobertWHurst/KeyboardJS/master/dist/keyboard.min.js"></script>
 <script>
-    supportedKeys = ['q', 'w', 'e', 'r', 'a', 's', 'd', 'f', 'z', 'x', 'c', 'v', 'u', 'i', 'o', 'p', 'j', 'k', 'l', 'semicolon', 'm', 'comma', 'dot', 'slash'];
+    supportedKeys = ['q', 'w', 'e', 'r', 'u', 'i', 'o', 'p', 'a', 's', 'd', 'f', 'j', 'k', 'l', 'semicolon', 'z', 'x', 'c', 'v', 'm', 'comma', 'dot', 'slash'];
     audio_json = {};
     audio_buffer_json = {};
     var audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -68,7 +93,7 @@
         }
         return originalKey;
     };
-    
+
     var container = $('.container');
     _.each(supportedKeys, function(n){
         var button = '<button class="' + n + '">' + actualKey(n) + '</button>';
